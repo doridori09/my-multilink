@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>사주월묘 — 디자인 컨셉 8</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0F0F0F;font-family:'Noto Sans KR',sans-serif;padding:48px 24px 80px;min-height:100vh}
+h1{text-align:center;color:#fff;font-family:'Noto Serif KR',serif;font-size:18px;font-weight:400;letter-spacing:.14em;margin-bottom:6px}
+.sub{text-align:center;color:#666;font-size:12px;font-weight:300;letter-spacing:.06em;margin-bottom:40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;max-width:1200px;margin:0 auto}
+
+/* ── 공통 카드 쉘 ── */
+.card{border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s;position:relative}
+.card:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,.5)}
+.badge{position:absolute;top:14px;right:14px;font-size:9px;letter-spacing:.12em;padding:4px 10px;border-radius:20px;font-weight:500}
+.card-label{padding:16px 20px 20px;display:flex;flex-direction:column;gap:4px}
+.card-num{font-size:10px;letter-spacing:.18em;font-weight:500}
+.card-title{font-size:15px;font-weight:600;letter-spacing:.04em}
+.card-desc{font-size:11px;font-weight:300;line-height:1.65;margin-top:2px}
+
+/* ── 미니 페이지 미리보기 ── */
+.preview{width:100%;height:320px;display:flex;flex-direction:column;align-items:center;padding:24px 20px 20px;gap:10px;position:relative;overflow:hidden}
+.p-avatar{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.p-name{font-size:13px;letter-spacing:.1em}
+.p-bio{font-size:9px;letter-spacing:.04em;text-align:center;line-height:1.7}
+.p-line{width:24px;height:1px}
+.p-cta{width:100%;padding:11px 0;border-radius:8px;font-size:11px;letter-spacing:.06em;text-align:center;font-weight:500}
+.p-links{width:100%;display:flex;flex-direction:column;gap:6px}
+.p-link{width:100%;padding:9px 14px;border-radius:7px;font-size:10px;letter-spacing:.03em;display:flex;align-items:center;gap:8px}
+.p-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* ══════════════════════════════
+   1. 묵 — 먹빛 서예 미니멀
+══════════════════════════════ */
+.c1{background:#F7F4ED}
+.c1 .badge{background:#1A1A1A;color:#C4973A}
+.c1 .card-label{background:#F7F4ED}
+.c1 .card-num{color:#C4973A}
+.c1 .card-title{color:#1A1A1A}
+.c1 .card-desc{color:#7A7060}
+.c1 .preview{background:#F7F4ED}
+.c1 .p-avatar{background:#1A1A1A;color:#C4973A}
+.c1 .p-name{font-family:'Noto Serif KR',serif;color:#1A1A1A}
+.c1 .p-bio{color:#7A7060}
+.c1 .p-line{background:#C4973A}
+.c1 .p-cta{background:#1A1A1A;color:#F7F4ED}
+.c1 .p-link{background:#EDEAE2;color:#1A1A1A}
+.c1 .p-dot{background:#C4973A}
+.c1 .stroke{position:absolute;bottom:-20px;right:-10px;font-size:120px;color:rgba(196,151,58,.07);font-family:'Noto Serif KR',serif;line-height:1;pointer-events:none}
+
+/* ══════════════════════════════
+   2. 달밤 — 루나 다크
+══════════════════════════════ */
+.c2{background:#0D0D0D}
+.c2 .badge{background:#C4973A;color:#0D0D0D}
+.c2 .card-label{background:#0D0D0D}
+.c2 .card-num{color:#C4973A}
+.c2 .card-title{color:#F0EDE6}
+.c2 .card-desc{color:#666}
+.c2 .preview{background:radial-gradient(ellipse at 60% 20%, #2A2210 0%, #0D0D0D 65%)}
+.c2 .p-avatar{background:rgba(196,151,58,.15);border:1px solid rgba(196,151,58,.3);color:#C4973A}
+.c2 .p-name{font-family:'Noto Serif KR',serif;color:#F0EDE6}
+.c2 .p-bio{color:#666}
+.c2 .p-line{background:rgba(196,151,58,.5)}
+.c2 .p-cta{background:#C4973A;color:#0D0D0D}
+.c2 .p-link{background:rgba(255,255,255,.05);color:#C8C0B4;border:1px solid rgba(255,255,255,.06)}
+.c2 .p-dot{background:#C4973A}
+.c2 .moon{position:absolute;top:12px;right:18px;width:32px;height:32px;border-radius:50%;background:rgba(196,151,58,.12);border:1px solid rgba(196,151,58,.2)}
+
+/* ══════════════════════════════
+   3. 천문 — 별자리 딥 네이비
+══════════════════════════════ */
+.c3{background:#08101E}
+.c3 .badge{background:rgba(255,255,255,.08);color:#A8C4E8}
+.c3 .card-label{background:#08101E}
+.c3 .card-num{color:#A8C4E8}
+.c3 .card-title{color:#E8F0F8}
+.c3 .card-desc{color:#4E6480}
+.c3 .preview{background:linear-gradient(160deg,#0D1830 0%,#06101A 100%)}
+.c3 .p-avatar{background:rgba(168,196,232,.1);border:1px solid rgba(168,196,232,.2);color:#A8C4E8}
+.c3 .p-name{font-family:'Noto Serif KR',serif;color:#E8F0F8}
+.c3 .p-bio{color:#4E6480}
+.c3 .p-line{background:rgba(168,196,232,.4)}
+.c3 .p-cta{background:#A8C4E8;color:#08101E}
+.c3 .p-link{background:rgba(168,196,232,.06);color:#A8C4E8;border:1px solid rgba(168,196,232,.1)}
+.c3 .p-dot{background:#C4973A}
+.c3 .stars{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+
+/* ══════════════════════════════
+   4. 한지 — 전통 페이퍼
+══════════════════════════════ */
+.c4{background:#EDE6D8}
+.c4 .badge{background:rgba(26,26,26,.8);color:#C4973A}
+.c4 .card-label{background:#EDE6D8}
+.c4 .card-num{color:#8B6914}
+.c4 .card-title{color:#1A1A1A}
+.c4 .card-desc{color:#6E6050}
+.c4 .preview{background:linear-gradient(160deg,#EDE6D8 0%,#E3D9C6 100%)}
+.c4 .p-avatar{background:rgba(139,105,20,.15);border:2px solid rgba(139,105,20,.3);color:#8B6914}
+.c4 .p-name{font-family:'Noto Serif KR',serif;color:#1A1A1A;font-weight:600}
+.c4 .p-bio{color:#6E6050}
+.c4 .p-line{background:#8B6914}
+.c4 .p-cta{background:#1A1A1A;color:#EDE6D8;border:none}
+.c4 .p-link{background:rgba(255,255,255,.5);color:#1A1A1A;border:1px solid rgba(139,105,20,.15)}
+.c4 .p-dot{background:#8B6914}
+.c4 .seal{position:absolute;bottom:16px;right:16px;width:36px;height:36px;border-radius:50%;border:2px solid rgba(139,105,20,.25);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(139,105,20,.3);font-family:'Noto Serif KR',serif}
+
+/* ══════════════════════════════
+   5. 매거진 — 에디토리얼 모던
+══════════════════════════════ */
+.c5{background:#FAFAFA}
+.c5 .badge{background:#1A1A1A;color:#fff}
+.c5 .card-label{background:#FAFAFA}
+.c5 .card-num{color:#C4973A}
+.c5 .card-title{color:#1A1A1A}
+.c5 .card-desc{color:#888}
+.c5 .preview{background:#FFFFFF;border-bottom:1px solid #F0F0F0}
+.c5 .p-avatar{background:#1A1A1A;color:#C4973A;border-radius:4px}
+.c5 .p-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:#1A1A1A;letter-spacing:.12em;text-transform:uppercase}
+.c5 .p-bio{color:#999;font-size:9px}
+.c5 .p-line{background:#C4973A;width:40px;height:2px}
+.c5 .p-cta{background:#1A1A1A;color:#fff;border-radius:2px;font-size:10px;letter-spacing:.12em}
+.c5 .p-link{background:#FAFAFA;color:#1A1A1A;border-bottom:1px solid #EBEBEB;border-radius:0;font-size:9px;letter-spacing:.08em}
+.c5 .p-dot{background:#C4973A;border-radius:0;width:8px;height:1px}
+
+/* ══════════════════════════════
+   6. 벨벳 — 딥 버건디 럭셔리
+══════════════════════════════ */
+.c6{background:#1A0A0A}
+.c6 .badge{background:rgba(196,151,58,.9);color:#1A0A0A}
+.c6 .card-label{background:#1A0A0A}
+.c6 .card-num{color:#C4973A}
+.c6 .card-title{color:#F0E8E0}
+.c6 .card-desc{color:#6A4040}
+.c6 .preview{background:linear-gradient(160deg,#2A1010 0%,#150808 100%)}
+.c6 .p-avatar{background:rgba(196,151,58,.15);border:1px solid rgba(196,151,58,.35);color:#C4973A}
+.c6 .p-name{font-family:'Noto Serif KR',serif;color:#F0E8E0}
+.c6 .p-bio{color:#7A5050}
+.c6 .p-line{background:linear-gradient(90deg,#C4973A,transparent)}
+.c6 .p-cta{background:linear-gradient(90deg,#C4973A,#A07828);color:#1A0A0A}
+.c6 .p-link{background:rgba(196,151,58,.06);color:#D4B898;border:1px solid rgba(196,151,58,.12)}
+.c6 .p-dot{background:#C4973A}
+
+/* ══════════════════════════════
+   7. 아르데코 — 기하학 골드
+══════════════════════════════ */
+.c7{background:#F5F0E8}
+.c7 .badge{background:#C4973A;color:#fff}
+.c7 .card-label{background:#F5F0E8}
+.c7 .card-num{color:#C4973A}
+.c7 .card-title{color:#1A1A1A}
+.c7 .card-desc{color:#7A7060}
+.c7 .preview{background:#F5F0E8;position:relative}
+.c7 .preview::before,.c7 .preview::after{content:'';position:absolute;border:1px solid rgba(196,151,58,.2)}
+.c7 .preview::before{inset:8px;border-radius:4px}
+.c7 .preview::after{inset:14px;border-radius:2px}
+.c7 .p-avatar{background:transparent;border:2px solid #C4973A;color:#C4973A;border-radius:0}
+.c7 .p-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:#1A1A1A;letter-spacing:.2em;text-transform:uppercase}
+.c7 .p-bio{color:#7A7060}
+.c7 .p-line{background:#C4973A;width:100%;height:1px;max-width:60px}
+.c7 .p-cta{background:transparent;color:#C4973A;border:1px solid #C4973A;font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.14em}
+.c7 .p-link{background:transparent;color:#1A1A1A;border:1px solid rgba(196,151,58,.25);border-radius:0}
+.c7 .p-dot{background:#C4973A;border-radius:0}
+
+/* ══════════════════════════════
+   8. 안개 — 미스티 그라데이션
+══════════════════════════════ */
+.c8{background:#F0EEF5}
+.c8 .badge{background:rgba(26,26,26,.7);color:#D4B8F0}
+.c8 .card-label{background:#F0EEF5}
+.c8 .card-num{color:#9B7DC8}
+.c8 .card-title{color:#1A1A1A}
+.c8 .card-desc{color:#7A7090}
+.c8 .preview{background:linear-gradient(160deg,#F8F4FF 0%,#EDE8F8 50%,#E8F0F8 100%)}
+.c8 .p-avatar{background:rgba(155,125,200,.15);border:1px solid rgba(155,125,200,.25);color:#9B7DC8}
+.c8 .p-name{font-family:'Noto Serif KR',serif;color:#1A1A1A}
+.c8 .p-bio{color:#7A7090}
+.c8 .p-line{background:linear-gradient(90deg,#9B7DC8,#C4973A)}
+.c8 .p-cta{background:linear-gradient(90deg,#2A2240,#1A1A2E);color:#E8E0F8}
+.c8 .p-link{background:rgba(255,255,255,.7);color:#2A2240;border:1px solid rgba(155,125,200,.15)}
+.c8 .p-dot{background:linear-gradient(#9B7DC8,#C4973A)}
+
+/* ── 하단 안내 ── */
+.hint{text-align:center;margin-top:48px;color:#444;font-size:12px;font-weight:300;letter-spacing:.04em;line-height:1.8}
+.hint strong{color:#C4973A;font-weight:500}
+</style>
+</head>
+<body>
+
+<h1>사주월묘 · 디자인 컨셉 8</h1>
+<p class="sub">마음에 드는 번호를 말씀해 주세요 — 해당 컨셉으로 바로 완성해드릴게요</p>
+
+<div class="grid">
+
+  <!-- 1 묵 -->
+  <div class="card c1">
+    <div class="preview">
+      <div class="stroke">月</div>
+      <div class="p-avatar">🌙</div>
+      <div class="p-name">사주월묘</div>
+      <div class="p-line"></div>
+      <div class="p-bio">깊은 통찰로 기질을 읽어드리는<br/>명리상담가</div>
+      <div class="p-cta">카카오톡 문의하기</div>
+      <div class="p-links">
+        <div class="p-link"><div class="p-dot"></div>블로그</div>
+        <div class="p-link"><div class="p-dot"></div>인스타그램</div>
+      </div>
+    </div>
+    <span class="badge">NO. 1</span>
+    <div class="card-label">
+      <span class="card-num">CONCEPT 01</span>
+      <span class="card-title">묵(墨) — 먹빛 서예</span>
+      <span class="card-desc">크림 바탕, 묵향 같은 여백.<br/>한자 워터마크로 깊이를 더함.</span>
+    </div>
+  </div>
+
+  <!-- 2 달밤 -->
+  <div class="card c2">
+    <div class="preview">
+      <div class="moon"></div>
+      <div class="p-avatar">🌙</div>
+      <div class="p-name">사주월묘</div>
+      <div class="p-line"></div>
+      <div class="p-bio">깊은 통찰로 기질을 읽어드리는<br/>명리상담가</div>
+      <div class="p-cta">카카오톡 문의하기</div>
+      <div class="p-links">
+        <div class="p-link"><div class="p-dot"></div>블로그</div>
+        <div class="p-link"><div class="p-dot"></div>인스타그램</div>
+      </div>
+    </div>
+    <span class="badge">NO. 2</span>
+    <div class="card-label">
+      <span class="card-num">CONCEPT 02</span>
+      <span class="card-title">달밤 — 루나 다크</span>
+      <span class="card-desc">칠흑 배경 위 골드 포인트.<br/>신비롭지 않고, 프리미엄하게.</span>
+    </div>
+  </div>
+
+  <!-- 3 천문 -->
+  <div class="card c3">
+    <div class="preview">
+      <div class="stars">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;opacity:.35">
+          <circle cx="20" cy="30" r=".8" fill="#A8C4E8"/><circle cx="80" cy="15" r=".6" fill="#A8C4E8"/>
+          <circle cx="140" cy="45" r=".9" fill="#A8C4E8"/><circle cx="60" cy="80" r=".7" fill="#C4973A"/>
+          <circle cx="200" cy="25" r=".8" fill="#A8C4E8"/><circle cx="240" cy="60" r=".6" fill="#A8C4E8"/>
+          <circle cx="30" cy="120" r=".7" fill="#A8C4E8"/><circle cx="170" cy="100" r=".8" fill="#C4973A"/>
+          <line x1="20" y1="30" x2="60" y2="80" stroke="#A8C4E8" stroke-width=".4" opacity=".4"/>
+          <line x1="80" y1="15" x2="140" y2="45" stroke="#A8C4E8" stroke-width=".4" opacity=".4"/>
+          <line x1="140" y1="45" x2="200" y2="25" stroke="#A8C4E8" stroke-width=".4" opacity=".4"/>
+        </svg>
+      </div>
+      <div class="p-avatar">✦</div>
+      <div class="p-name">사주월묘</div>
+      <div class="p-line"></div>
+      <div class="p-bio">깊은 통찰로 기질을 읽어드리는<br/>명리상담가</div>
+      <div class="p-cta">카카오톡 문의하기</div>
+      <div class="p-links">
+        <div class="p-link"><div class="p-dot"></div>블로그</div>
+        <div class="p-link"><div class="p-dot"></div>인스타그램</div>
+      </div>
+    </div>
+    <span class="badge">NO. 3</span>
+    <div class="card-label">
+      <span class="card-num">CONCEPT 03</span>
+      <span class="card-title">천문 — 별자리 네이비</span>
+      <span class="card-desc">딥 네이비 + 별자리 선 + 블루 포인트.<br/>우주적 시각, 지적인 분위기.</span>
+    </div>
+  </div>
+
+  <!-- 4 한지 -->
+  <div class="card c4">
+    <div class="preview">
+      <div class="seal">月</div>
+      <div class="p-avatar">🌙</div>
+      <div class="p-name">사주월묘</div>
+      <div class="p-line"></div>
+      <div class="p-bio">깊은 통찰로 기질을 읽어드리는<br/>명리상담가</div>
+      <div class="p-cta">카카오톡 문의하기</div>
+      <div class="p-links">
+        <div class="p-link"><div class="p-dot"></div>블로그</div>
+        <div class="p-link"><div class="p-dot"></div>인스타그램</div>
+      </div>
+    </div>
+    <span class="badge">NO. 4</span>
+    <div class="card-label">
+      <span class="card-num">CONCEPT 04</span>
+      <span class="card-title">한지 — 전통 페이퍼</span>
+      <span class="card-desc">따뜻한 한지 색감 + 도장 인장 포인트.<br/>명리학 고유의 품격.</span>
+    </div>
+  </div>
+
+  <!-- 5 매거진 -->
+  <div class="card c5">
+    <div class="preview">
+      <div class="p-avatar">사</div>
+      <div class="p-name">SAJUWOLMYO</div>
+      <div class="p-line"></div>
+      <div class="p-bio">명리상담가 · 기질 심층분석 전문</div>
+      <div class="p-cta">KAKAO CHANNEL</div>
+      <div class="p-links">
+        <div class="p-link"><div class="p-dot"></div>BLOG</div>
+        <div class="p-link"><div class="p-dot"></div>INSTAGRAM</div>
+        <div class="p-link"><div class="p-dot"></div>REVIEWS</div>
+      </div>
+    </div>
+    <span class="badge">NO. 5</span>
+    <div class="card-label">
+      <span class="card-num">CONCEPT 05</span>
+      <span class="card-title">매거진 — 에디토리얼</span>
+      <span class="card-desc">순백 바탕, 대문자 세리프 타이포.<br/>패션 매거진 같은 프리미엄.</span>
+    </div>
+  </div>
+
+  <!-- 6 벨벳 -->
+  <div class="card c6">
+    <div class="preview">
+      <div class="p-avatar">🌙</div>
+      <div class="p-name">사주월묘</div>
+      <div class="p-line"></div>
+      <div class="p-bio">깊은 통찰로 기질을 읽어드리는<br/>명리상담가</div>
+      <div class="p-cta">카카오톡 문의하기</div>
+      <div class="p-links">
+        <div class="p-link"><div class="p-dot"></div>블로그</div>
+        <div class="p-link"><div class="p-dot"></div>인스타그램</div>
+      </div>
+    </div>
+    <span class="badge">NO. 6</span>
+    <div class="card-label">
+      <span class="card-num">CONCEPT 06</span>
+      <span class="card-title">벨벳 — 딥 버건디</span>
+      <span class="card-desc">와인빛 다크 + 골드 그라데이션 CTA.<br/>럭셔리 바 같은 깊은 분위기.</span>
+    </div>
+  </div>
+
+  <!-- 7 아르데코 -->
+  <div class="card c7">
+    <div class="preview">
+      <div class="p-avatar">사</div>
+      <div class="p-name">SAJUWOLMYO</div>
+      <div class="p-line"></div>
+      <div class="p-bio">명리상담가 · 기질 심층분석 전문</div>
+      <div class="p-cta">KAKAO CHANNEL →</div>
+      <div class="p-links">
+        <div class="p-link"><div class="p-dot"></div>블로그</div>
+        <div class="p-link"><div class="p-dot"></div>인스타그램</div>
+      </div>
+    </div>
+    <span class="badge">NO. 7</span>
+    <div class="card-label">
+      <span class="card-num">CONCEPT 07</span>
+      <span class="card-title">아르데코 — 기하학 골드</span>
+      <span class="card-desc">이중 골드 프레임 + 직각 레이아웃.<br/>20년대 럭셔리 미학.</span>
+    </div>
+  </div>
+
+  <!-- 8 안개 -->
+  <div class="card c8">
+    <div class="preview">
+      <div class="p-avatar">🌙</div>
+      <div class="p-name">사주월묘</div>
+      <div class="p-line"></div>
+      <div class="p-bio">깊은 통찰로 기질을 읽어드리는<br/>명리상담가</div>
+      <div class="p-cta">카카오톡 문의하기</div>
+      <div class="p-links">
+        <div class="p-link"><div class="p-dot"></div>블로그</div>
+        <div class="p-link"><div class="p-dot"></div>인스타그램</div>
+      </div>
+    </div>
+    <span class="badge">NO. 8</span>
+    <div class="card-label">
+      <span class="card-num">CONCEPT 08</span>
+      <span class="card-title">안개 — 미스티 퍼플</span>
+      <span class="card-desc">라벤더→골드 안개 그라데이션.<br/>신비롭되 과하지 않은 여성적 감성.</span>
+    </div>
+  </div>
+
+</div>
+
+<p class="hint">
+  마음에 드는 번호를 말씀해 주세요<br/>
+  <strong>하나만 골라도, 두 개를 섞어도</strong> 바로 만들어드릴게요
+</p>
+
+</body>
+</html>
