@@ -1,571 +1,355 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>사주월묘</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사주월묘 — 명리상담가</title>
+  <meta name="description" content="단순한 통변이 아닌, 깊은 통찰로 당신의 기질을 읽어드리는 명리상담가 사주월묘">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css">
+  <script src="https://code.iconify.design/iconify-icon/2.3.0/iconify-icon.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Pretendard', 'system-ui', 'sans-serif'] },
+          keyframes: {
+            float: {
+              '0%,100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' },
+            },
+          },
+          animation: {
+            float: 'float 7s ease-in-out infinite',
+            'float-slow': 'float 10s ease-in-out infinite',
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; word-break: keep-all; }
+    body { font-family: 'Pretendard', system-ui, sans-serif; }
 
-    :root {
-      --bg-from:   #F4F0FF;
-      --bg-to:     #EAF0FB;
-      --surface:   rgba(255,255,255,0.72);
-      --surface-solid: #FFFFFF;
-      --ink:       #1E1830;
-      --ink-soft:  #7A7090;
-      --purple:    #7B5EA7;
-      --purple-light: rgba(123,94,167,0.12);
-      --gold:      #B5924C;
-      --gold-light: rgba(181,146,76,0.15);
-      --radius:    16px;
-      --max-w:     420px;
-    }
-
-    html {
-      background: linear-gradient(160deg, var(--bg-from) 0%, var(--bg-to) 100%);
-      min-height: 100vh;
-    }
-
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      color: var(--ink);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 52px 20px 80px;
-      background: transparent;
-    }
-
-    /* 배경 안개 오브 */
-    body::before, body::after {
+    /* ── 노이즈 오버레이 ── */
+    body::after {
       content: '';
       position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
+      inset: 0;
+      z-index: 60;
       pointer-events: none;
-      z-index: -1;
-    }
-    body::before {
-      width: 320px;
-      height: 320px;
-      background: rgba(155, 125, 200, 0.18);
-      top: -60px;
-      right: -60px;
-    }
-    body::after {
-      width: 280px;
-      height: 280px;
-      background: rgba(181, 146, 76, 0.12);
-      bottom: 80px;
-      left: -80px;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    .wrap {
-      width: 100%;
-      max-width: var(--max-w);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+    /* ── 배경 메시 그라데이션 ── */
+    .mesh-bg {
+      background:
+        radial-gradient(ellipse 70% 50% at 85% 5%, rgba(181,146,76,0.09) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 65% at 5% 90%, rgba(181,146,76,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(28,20,10,0.4) 0%, transparent 100%),
+        #09090b;
     }
 
-    /* ── ① 프로필 ── */
-    .profile {
-      background: var(--surface);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.6);
-      border-radius: var(--radius);
-      padding: 36px 24px 28px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0;
+    /* ── 유리 카드 ── */
+    .glass {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        0 4px 32px rgba(0,0,0,0.3);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
     }
 
-    .avatar-wrap {
-      position: relative;
-      margin-bottom: 16px;
+    /* ── 앰버 글로우 카드 ── */
+    .glass-amber {
+      background: rgba(181,146,76,0.04);
+      border: 1px solid rgba(181,146,76,0.18);
+      box-shadow:
+        inset 0 1px 0 rgba(181,146,76,0.08),
+        0 4px 32px rgba(0,0,0,0.3),
+        0 0 0 1px rgba(0,0,0,0.5);
     }
 
-    .avatar {
-      width: 86px;
-      height: 86px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(123,94,167,0.2), rgba(181,146,76,0.2));
-      border: 1.5px solid rgba(123,94,167,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 34px;
-      overflow: hidden;
+    /* ── 리빌 애니메이션 ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition:
+        opacity 0.75s cubic-bezier(0.16,1,0.3,1),
+        transform 0.75s cubic-bezier(0.16,1,0.3,1);
     }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 80ms; }
+    .reveal-d2 { transition-delay: 160ms; }
+    .reveal-d3 { transition-delay: 240ms; }
+    .reveal-d4 { transition-delay: 320ms; }
+    .reveal-d5 { transition-delay: 400ms; }
 
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    /* ── 마그네틱 버튼 ── */
+    .btn-kakao {
+      transition: all 0.45s cubic-bezier(0.16,1,0.3,1);
+      will-change: transform;
     }
-
-    .avatar-glow {
-      position: absolute;
-      inset: -6px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(123,94,167,0.15) 0%, transparent 70%);
-      pointer-events: none;
+    .btn-kakao:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 16px 40px rgba(254,229,0,0.28);
     }
+    .btn-kakao:active { transform: scale(0.97); }
 
-    .profile-name {
-      font-family: 'Noto Serif KR', serif;
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      color: var(--ink);
-      text-align: center;
+    .btn-dl {
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      will-change: transform;
     }
-
-    .profile-divider {
-      width: 32px;
-      height: 1.5px;
-      background: linear-gradient(90deg, var(--purple), var(--gold));
-      border-radius: 2px;
-      margin: 12px auto;
+    .btn-dl:hover {
+      transform: translateY(-2px);
+      background: rgba(181,146,76,0.22) !important;
+      box-shadow: 0 8px 24px rgba(181,146,76,0.18);
     }
+    .btn-dl:active { transform: scale(0.97); }
 
-    .profile-bio {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--ink-soft);
-      line-height: 1.8;
-      text-align: center;
-      letter-spacing: 0.01em;
+    /* ── 링크 행 ── */
+    .link-row {
+      transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+      will-change: transform;
     }
-
-    .profile-bio strong {
-      color: var(--ink);
-      font-weight: 500;
+    .link-row:hover {
+      transform: translateX(5px);
+      background: rgba(255,255,255,0.06) !important;
+      border-color: rgba(181,146,76,0.28) !important;
     }
+    .link-row:hover .arrow-icon { color: #D4AF6E; transform: translateX(3px); }
+    .arrow-icon { transition: all 0.3s cubic-bezier(0.16,1,0.3,1); color: rgba(181,146,76,0.35); }
 
-    .profile-stats {
-      display: flex;
-      gap: 0;
-      margin-top: 22px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(123,94,167,0.1);
-      width: 100%;
-    }
-
-    .stat {
-      flex: 1;
-      text-align: center;
-      position: relative;
-    }
-
-    .stat + .stat::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      height: 24px;
-      width: 1px;
-      background: rgba(123,94,167,0.15);
-    }
-
+    /* ── 통계 수 그라데이션 ── */
     .stat-num {
-      font-family: 'Noto Serif KR', serif;
-      font-size: 15px;
-      font-weight: 600;
-      background: linear-gradient(90deg, var(--purple), var(--gold));
+      background: linear-gradient(120deg, #D4AF6E 0%, #B5924C 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 0.02em;
     }
 
-    .stat-label {
-      font-size: 10px;
-      font-weight: 300;
-      color: var(--ink-soft);
-      margin-top: 3px;
-      letter-spacing: 0.06em;
+    /* ── 링크 아이콘 박스 ── */
+    .icon-box {
+      background: rgba(181,146,76,0.08);
+      border: 1px solid rgba(181,146,76,0.14);
+      transition: background 0.3s;
+    }
+    .link-row:hover .icon-box {
+      background: rgba(181,146,76,0.14);
     }
 
-    /* ── ② 카카오톡 CTA ── */
-    .cta-block {
-      background: linear-gradient(135deg, #1E1830 0%, #2A1E3E 100%);
-      border-radius: var(--radius);
-      padding: 30px 24px 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-block::before {
-      content: '';
-      position: absolute;
-      top: -40px;
-      right: -40px;
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(181,146,76,0.15) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .cta-block::after {
-      content: '';
-      position: absolute;
-      bottom: -30px;
-      left: -30px;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(123,94,167,0.2) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .cta-eyebrow {
-      font-size: 9px;
-      letter-spacing: 0.22em;
-      color: var(--gold);
-      font-weight: 500;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .cta-title {
-      font-family: 'Noto Serif KR', serif;
-      font-size: 18px;
-      font-weight: 400;
-      color: #F0EBF8;
-      letter-spacing: 0.04em;
-      text-align: center;
-      line-height: 1.65;
-      position: relative;
-      z-index: 1;
-    }
-
-    .cta-sub {
-      font-size: 12px;
-      font-weight: 300;
-      color: rgba(200,190,220,0.7);
-      text-align: center;
-      line-height: 1.8;
-      margin-top: 8px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .cta-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 20px;
-      width: 100%;
-      padding: 15px 0;
-      background: #FEE500;
-      color: #1E1830;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      text-decoration: none;
-      position: relative;
-      z-index: 1;
-      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
-
-    .cta-btn:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(254,229,0,0.25);
-    }
-
-    .cta-btn:active {
-      transform: translateY(0);
-    }
-
-    /* ── ③ 무료 자료 ── */
-    .freebie {
-      background: var(--surface);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(123,94,167,0.18);
-      border-radius: var(--radius);
-      padding: 26px 24px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .freebie::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--purple), var(--gold));
-      border-radius: var(--radius) var(--radius) 0 0;
-    }
-
-    .freebie-label {
-      font-size: 9px;
-      letter-spacing: 0.2em;
-      color: var(--purple);
-      font-weight: 500;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .freebie-title {
-      font-family: 'Noto Serif KR', serif;
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--ink);
-      line-height: 1.6;
-      letter-spacing: 0.02em;
-    }
-
-    .freebie-desc {
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--ink-soft);
-      line-height: 1.8;
-      margin-top: 8px;
-    }
-
-    .freebie-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      margin-top: 18px;
-      padding: 11px 22px;
-      background: linear-gradient(135deg, var(--purple), #5E4080);
-      color: #F4F0FF;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.07em;
-      text-decoration: none;
-      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
-
-    .freebie-btn:hover {
-      opacity: 0.88;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(123,94,167,0.3);
-    }
-
-    /* ── ④ 링크 4개 ── */
-    .links {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .link-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--surface);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.55);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      text-decoration: none;
-      color: var(--ink);
-      transition: background 0.2s, transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .link-item:hover {
-      background: rgba(255,255,255,0.88);
-      border-color: rgba(123,94,167,0.25);
-      transform: translateX(4px);
-      box-shadow: 0 4px 16px rgba(123,94,167,0.1);
-    }
-
-    .link-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .link-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(123,94,167,0.12), rgba(181,146,76,0.1));
-      border: 1px solid rgba(123,94,167,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 17px;
-      flex-shrink: 0;
-    }
-
-    .link-name {
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      color: var(--ink);
-    }
-
-    .link-sub {
-      font-size: 11px;
-      font-weight: 300;
-      color: var(--ink-soft);
-      margin-top: 2px;
-    }
-
-    .link-arrow {
-      font-size: 14px;
-      color: rgba(123,94,167,0.4);
-      flex-shrink: 0;
-      transition: transform 0.2s, color 0.2s;
-    }
-
-    .link-item:hover .link-arrow {
-      transform: translateX(3px);
-      color: var(--purple);
-    }
-
-    /* ── 푸터 ── */
-    .footer {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 10px;
-      font-weight: 300;
-      color: rgba(123,94,167,0.35);
-      letter-spacing: 0.08em;
+    /* ── CTA 다크 배경 ── */
+    .cta-bg {
+      background: linear-gradient(145deg, #120e04 0%, #0e0a02 100%);
+      border: 1px solid rgba(181,146,76,0.2);
+      box-shadow:
+        inset 0 1px 0 rgba(181,146,76,0.1),
+        0 4px 40px rgba(0,0,0,0.4);
     }
   </style>
 </head>
-<body>
-  <div class="wrap">
+
+<body class="mesh-bg min-h-[100dvh] flex flex-col items-center px-4 py-14 pb-24 relative">
+
+  <!-- 플로팅 글로우 오브 (고정) -->
+  <div class="fixed pointer-events-none animate-float"
+       style="top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;
+              background:radial-gradient(circle,rgba(181,146,76,0.07) 0%,transparent 70%);z-index:0;"></div>
+  <div class="fixed pointer-events-none animate-float-slow"
+       style="bottom:60px;left:-100px;width:300px;height:300px;border-radius:50%;
+              background:radial-gradient(circle,rgba(181,146,76,0.05) 0%,transparent 70%);z-index:0;animation-delay:4s;"></div>
+
+  <div class="w-full max-w-[375px] flex flex-col gap-3 relative z-10">
 
     <!-- ① 프로필 -->
-    <section class="profile">
-      <div class="avatar-wrap">
-        <div class="avatar-glow"></div>
-        <div class="avatar">
-          <!-- 프로필 사진 교체 시: <img src="[사진파일명.jpg]" alt="사주월묘" /> 로 변경 -->
-          🌙
+    <section class="glass rounded-2xl px-6 pt-10 pb-7 flex flex-col items-center reveal">
+
+      <!-- 아바타 -->
+      <div class="relative mb-5 animate-float">
+        <div class="w-[82px] h-[82px] rounded-full flex items-center justify-center overflow-hidden relative"
+             style="background:rgba(181,146,76,0.1);border:1.5px solid rgba(181,146,76,0.28);">
+          <!-- 프로필 사진 교체: <img src="[파일명.jpg]" alt="사주월묘" class="w-full h-full object-cover"> -->
+          <iconify-icon icon="solar:moon-stars-bold-duotone" style="font-size:36px;color:#B5924C;"></iconify-icon>
         </div>
+        <!-- 글로우 링 -->
+        <div class="absolute inset-0 rounded-full pointer-events-none"
+             style="background:radial-gradient(circle,rgba(181,146,76,0.18) 0%,transparent 68%);"></div>
       </div>
 
-      <h1 class="profile-name">사주월묘</h1>
-      <div class="profile-divider"></div>
-      <p class="profile-bio">
-        단순한 통변이 아닌, 깊은 통찰로<br />
-        <strong>당신의 기질을 읽어드리는</strong> 명리상담가
+      <!-- 이름 -->
+      <h1 class="text-[21px] font-bold tracking-[0.1em] text-white leading-tight">사주월묘</h1>
+
+      <!-- 구분선 -->
+      <div class="w-7 h-[1.5px] my-3 rounded-full"
+           style="background:linear-gradient(90deg,#B5924C,rgba(181,146,76,0.3));"></div>
+
+      <!-- 소개 -->
+      <p class="text-[13px] text-zinc-400 leading-[1.8] text-center" style="max-width:220px;">
+        단순한 통변이 아닌, 깊은 통찰로<br>
+        <span class="text-zinc-200 font-medium">당신의 기질을 읽어드리는</span> 명리상담가
       </p>
 
-      <div class="profile-stats">
-        <div class="stat">
-          <div class="stat-num">7년</div>
-          <div class="stat-label">경력</div>
+      <!-- 통계 -->
+      <div class="w-full grid grid-cols-3 mt-6 pt-5"
+           style="border-top:1px solid rgba(255,255,255,0.055);">
+        <div class="flex flex-col items-center gap-[5px]">
+          <span class="stat-num text-[15px] font-bold">7년</span>
+          <span class="text-[10px] text-zinc-500 tracking-[0.08em]">경력</span>
         </div>
-        <div class="stat">
-          <div class="stat-num">1,100건</div>
-          <div class="stat-label">누적 상담</div>
+        <div class="flex flex-col items-center gap-[5px]"
+             style="border-left:1px solid rgba(255,255,255,0.055);border-right:1px solid rgba(255,255,255,0.055);">
+          <span class="stat-num text-[15px] font-bold">1,100건</span>
+          <span class="text-[10px] text-zinc-500 tracking-[0.08em]">누적 상담</span>
         </div>
-        <div class="stat">
-          <div class="stat-num">★ 4.9</div>
-          <div class="stat-label">평균 별점</div>
+        <div class="flex flex-col items-center gap-[5px]">
+          <span class="stat-num text-[15px] font-bold">★ 4.9</span>
+          <span class="text-[10px] text-zinc-500 tracking-[0.08em]">평균 별점</span>
         </div>
       </div>
     </section>
 
-    <!-- ② 카카오톡 CTA -->
-    <section class="cta-block">
-      <span class="cta-eyebrow">상담 문의</span>
-      <h2 class="cta-title">지금 바로 카카오톡으로<br />편하게 말 걸어주세요</h2>
-      <p class="cta-sub">
-        직업운 · 연애운 · 재회 · 인간관계<br />
-        뭐든 괜찮아요, 먼저 물어봐 주세요 😊
+    <!-- ② 카카오 CTA -->
+    <section class="cta-bg rounded-2xl px-6 pt-7 pb-6 flex flex-col items-center relative overflow-hidden reveal reveal-d1">
+
+      <!-- 라디얼 앰버 글로우 -->
+      <div class="absolute -top-12 -right-12 w-48 h-48 pointer-events-none rounded-full"
+           style="background:radial-gradient(circle,rgba(181,146,76,0.13) 0%,transparent 70%);"></div>
+      <div class="absolute -bottom-10 -left-10 w-40 h-40 pointer-events-none rounded-full"
+           style="background:radial-gradient(circle,rgba(181,146,76,0.07) 0%,transparent 70%);"></div>
+
+      <span class="text-[9px] font-semibold tracking-[0.24em] mb-3 relative z-10"
+            style="color:#B5924C;">CONSULTATION</span>
+
+      <h2 class="text-[17px] font-semibold text-white text-center leading-[1.6] mb-2 relative z-10">
+        지금 바로 카카오톡으로<br>편하게 말 걸어주세요
+      </h2>
+      <p class="text-[12px] text-zinc-500 text-center leading-[1.8] mb-5 relative z-10">
+        직업운 · 연애운 · 재회 · 인간관계<br>뭐든 괜찮아요, 먼저 물어봐 주세요
       </p>
-      <a href="http://pf.kakao.com/_HxkvzX/chat" class="cta-btn" target="_blank" rel="noopener">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#1E1830" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 3C6.477 3 2 6.582 2 11c0 2.83 1.756 5.314 4.399 6.808L5.5 21l3.897-2.07C10.215 19.31 11.093 19.5 12 19.5c5.523 0 10-3.582 10-8S17.523 3 12 3z"/>
-        </svg>
+
+      <a href="http://pf.kakao.com/_HxkvzX/chat"
+         class="btn-kakao w-full flex items-center justify-center gap-2 rounded-xl text-[14px] font-semibold tracking-wide text-zinc-900 relative z-10"
+         style="background:#FEE500;min-height:52px;"
+         target="_blank" rel="noopener">
+        <iconify-icon icon="solar:chat-round-bold" style="font-size:18px;"></iconify-icon>
         카카오톡 채널 바로가기
+        <iconify-icon icon="solar:arrow-right-bold" style="font-size:13px;margin-left:1px;"></iconify-icon>
       </a>
     </section>
 
     <!-- ③ 무료 자료 -->
-    <section class="freebie">
-      <p class="freebie-label">Free Download</p>
-      <h3 class="freebie-title">내 사주 속 숨겨진 무기 찾기<br />일간별 핵심 가이드</h3>
-      <p class="freebie-desc">
-        내 일간(日干)이 가진 본래 기질과 강점을 명리학적으로 풀어드려요.<br />
+    <section class="glass rounded-2xl px-6 pt-6 pb-6 relative overflow-hidden reveal reveal-d2">
+      <!-- 상단 앰버 라인 -->
+      <div class="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
+           style="background:linear-gradient(90deg,#B5924C 0%,rgba(181,146,76,0.08) 100%);"></div>
+
+      <span class="text-[9px] font-semibold tracking-[0.22em] mb-3 block"
+            style="color:#B5924C;">FREE DOWNLOAD</span>
+
+      <h3 class="text-[15px] font-bold text-white leading-snug mb-[6px]">
+        내 사주 속 숨겨진 무기 찾기
+      </h3>
+      <p class="text-[13px] text-zinc-400 mb-1">일간별 핵심 가이드</p>
+      <p class="text-[12px] text-zinc-500 leading-[1.75] mb-5">
+        내 일간(日干)이 가진 본래 기질과 강점을 명리학적으로 풀어드려요.<br>
         나도 몰랐던 내 안의 무기, 지금 바로 확인해 보세요.
       </p>
-      <a href="https://drive.google.com/file/d/15V2tzKmuD3F9ji8Y3hZQZBi9qpNOHO4p/view?usp=drive_link" class="freebie-btn" target="_blank" rel="noopener">
-        ↓ &nbsp;무료로 받기
+
+      <a href="https://drive.google.com/file/d/15V2tzKmuD3F9ji8Y3hZQZBi9qpNOHO4p/view?usp=drive_link"
+         class="btn-dl inline-flex items-center gap-2 px-5 rounded-lg text-[12px] font-semibold tracking-wide"
+         style="background:rgba(181,146,76,0.12);color:#D4AF6E;border:1px solid rgba(181,146,76,0.22);min-height:44px;"
+         target="_blank" rel="noopener">
+        <iconify-icon icon="solar:download-minimalistic-bold" style="font-size:15px;"></iconify-icon>
+        무료로 받기
       </a>
     </section>
 
     <!-- ④ 링크 4개 -->
-    <nav class="links">
-      <a href="https://blog.naver.com/wolmyo_saju" class="link-item" target="_blank" rel="noopener">
-        <div class="link-left">
-          <div class="link-icon">✍️</div>
+    <nav class="flex flex-col gap-[10px]">
+
+      <a href="https://blog.naver.com/wolmyo_saju"
+         class="link-row glass rounded-2xl px-5 py-4 flex items-center justify-between reveal reveal-d2"
+         target="_blank" rel="noopener">
+        <div class="flex items-center gap-3">
+          <div class="icon-box w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <iconify-icon icon="solar:pen-bold-duotone" style="font-size:18px;color:#B5924C;"></iconify-icon>
+          </div>
           <div>
-            <div class="link-name">사주월묘 블로그</div>
-            <div class="link-sub">명리 이야기 · 상담 후기</div>
+            <div class="text-[13px] font-medium text-zinc-100">사주월묘 블로그</div>
+            <div class="text-[11px] text-zinc-500 mt-[3px]">명리 이야기 · 상담 후기</div>
           </div>
         </div>
-        <span class="link-arrow">→</span>
+        <iconify-icon icon="solar:arrow-right-linear" class="arrow-icon" style="font-size:15px;flex-shrink:0;"></iconify-icon>
       </a>
 
-      <a href="[인스타그램 링크]" class="link-item" target="_blank" rel="noopener">
-        <div class="link-left">
-          <div class="link-icon">📸</div>
+      <a href="[인스타그램 링크]"
+         class="link-row glass rounded-2xl px-5 py-4 flex items-center justify-between reveal reveal-d3"
+         target="_blank" rel="noopener">
+        <div class="flex items-center gap-3">
+          <div class="icon-box w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <iconify-icon icon="solar:instagram-bold-duotone" style="font-size:18px;color:#B5924C;"></iconify-icon>
+          </div>
           <div>
-            <div class="link-name">인스타그램</div>
-            <div class="link-sub">일상 · 명리 콘텐츠</div>
+            <div class="text-[13px] font-medium text-zinc-100">인스타그램</div>
+            <div class="text-[11px] text-zinc-500 mt-[3px]">일상 · 명리 콘텐츠</div>
           </div>
         </div>
-        <span class="link-arrow">→</span>
+        <iconify-icon icon="solar:arrow-right-linear" class="arrow-icon" style="font-size:15px;flex-shrink:0;"></iconify-icon>
       </a>
 
-      <a href="[유튜브 링크]" class="link-item" target="_blank" rel="noopener">
-        <div class="link-left">
-          <div class="link-icon">▶️</div>
+      <a href="[유튜브 링크]"
+         class="link-row glass rounded-2xl px-5 py-4 flex items-center justify-between reveal reveal-d4"
+         target="_blank" rel="noopener">
+        <div class="flex items-center gap-3">
+          <div class="icon-box w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <iconify-icon icon="solar:play-circle-bold-duotone" style="font-size:18px;color:#B5924C;"></iconify-icon>
+          </div>
           <div>
-            <div class="link-name">유튜브</div>
-            <div class="link-sub">사주 · 명리 영상</div>
+            <div class="text-[13px] font-medium text-zinc-100">유튜브</div>
+            <div class="text-[11px] text-zinc-500 mt-[3px]">사주 · 명리 영상</div>
           </div>
         </div>
-        <span class="link-arrow">→</span>
+        <iconify-icon icon="solar:arrow-right-linear" class="arrow-icon" style="font-size:15px;flex-shrink:0;"></iconify-icon>
       </a>
 
-      <a href="[후기 링크]" class="link-item" target="_blank" rel="noopener">
-        <div class="link-left">
-          <div class="link-icon">⭐</div>
+      <a href="[후기 링크]"
+         class="link-row glass rounded-2xl px-5 py-4 flex items-center justify-between reveal reveal-d5"
+         target="_blank" rel="noopener">
+        <div class="flex items-center gap-3">
+          <div class="icon-box w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <iconify-icon icon="solar:star-bold-duotone" style="font-size:18px;color:#B5924C;"></iconify-icon>
+          </div>
           <div>
-            <div class="link-name">상담 후기</div>
-            <div class="link-sub">실제 내담자 후기 모음</div>
+            <div class="text-[13px] font-medium text-zinc-100">상담 후기</div>
+            <div class="text-[11px] text-zinc-500 mt-[3px]">실제 내담자 후기 모음</div>
           </div>
         </div>
-        <span class="link-arrow">→</span>
+        <iconify-icon icon="solar:arrow-right-linear" class="arrow-icon" style="font-size:15px;flex-shrink:0;"></iconify-icon>
       </a>
+
     </nav>
 
-    <footer class="footer">ⓒ 2025 사주월묘 · 이메일 상담 전용</footer>
+    <footer class="text-center mt-3 text-[10px] tracking-widest"
+            style="color:rgba(181,146,76,0.22);">
+      ⓒ 2025 사주월묘 · 이메일 상담 전용
+    </footer>
 
   </div>
+
+  <script>
+    // IntersectionObserver 스태거드 리빌
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+
 </body>
 </html>
